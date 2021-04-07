@@ -1,0 +1,1 @@
+export const NotFoundError = {    getError(){        return "module not found";    }};export default function (){    return NotFoundError;}

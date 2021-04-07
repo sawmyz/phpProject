@@ -1,0 +1,5 @@
+$(function () {
+$('.viewButton').hide()
+})
+
+

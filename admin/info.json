@@ -1,0 +1,192 @@
+{
+  "CustomerServices": {
+    "RegisterUser": {
+      "Wsdl": "https://api.negaclub.ir/CustomerService?wsdl",
+      "Params": {
+        "Mobile": "int",
+        "Credit": "int",
+        "FirstName": "string",
+        "LastName": "string",
+        "Email": "string",
+        "Address": "string",
+        "CustomerCode": "int",
+        "Token": "string"
+      },
+      "StatusCodes": [
+        {
+          "Code": 1,
+          "Message": "Success"
+        },
+        {
+          "Code": -101,
+          "Message": "Mobile is not valid"
+        },
+        {
+          "Code": -102,
+          "Message": "Credit is not valid"
+        },
+        {
+          "Code": -103,
+          "Message": "FirstName is not valid"
+        },
+        {
+          "Code": -104,
+          "Message": "LastName is not valid"
+        },
+        {
+          "Code": -105,
+          "Message": "CustomerCode is not valid"
+        },
+        {
+          "Code": -106,
+          "Message": "Token is not valid"
+        },
+        {
+          "Code": -107,
+          "Message": "Email is not valid"
+        },
+        {
+          "Code": -111,
+          "Message": "Token not found"
+        },
+        {
+          "Code": -112,
+          "Message": "Wrong ip address"
+        },
+        {
+          "Code": -113,
+          "Message": "Invalid customer",
+          "Detail": "A customer with this mobile is already registered for this startup"
+        },
+        {
+          "Code": -500,
+          "Message": "Error on add"
+        }
+      ]
+    }
+  },
+  "WalletService": {
+    "ChargeWallet": {
+      "Wsdl": "https://api.negaclub.ir/WalletService?wsdl",
+      "Params": {
+          "Mobile": "string",
+          "Token": "string",
+          "CurrentCredit": "int",
+          "NewCredit": "int"
+      },
+      "StatusCodes": [
+        {
+          "Code": 1,
+          "Message": "Success"
+        },
+        {
+          "Code": -101,
+          "Message": "Invalid mobile"
+        },
+        {
+          "Code": -102,
+          "Message": "Token is not valid"
+        },
+        {
+          "Code": -103,
+          "Message": "CurrentCredit is not valid"
+        },
+        {
+          "Code": -104,
+          "Message": "NewCredit is not valid"
+        },
+        {
+          "Code": -111,
+          "Message": "Token not found"
+        },
+        {
+          "Code": -404,
+          "Message": "Customer not found"
+        },
+        {
+          "Code": -501,
+          "Message": "Error on save"
+        },
+        {
+          "Code": -502,
+          "Message": "Error on update"
+        }
+      ]
+    },
+    "SpendFromWallet": {
+      "Wsdl": "https://api.negaclub.ir/WalletService?wsdl",
+      "Params": {
+          "Mobile": "string",
+          "Token": "string",
+          "CurrentCredit": "int",
+          "NewCredit": "int"
+      },
+      "StatusCodes": [
+        {
+          "Code": 1,
+          "Message": "Success"
+        },
+        {
+          "Code": -101,
+          "Message": "Invalid mobile"
+        },
+        {
+          "Code": -102,
+          "Message": "Token is not valid"
+        },
+        {
+          "Code": -103,
+          "Message": "CurrentCredit is not valid"
+        },
+        {
+          "Code": -104,
+          "Message": "NewCredit is not valid"
+        },
+        {
+          "Code": -111,
+          "Message": "Token not found"
+        },
+        {
+          "Code": -404,
+          "Message": "Customer not found"
+        },
+        {
+          "Code": -501,
+          "Message": "Error on save"
+        },
+        {
+          "Code": -502,
+          "Message": "Error on update"
+        }
+      ]
+    },
+    "WalletList": {
+      "Wsdl": "https://api.negaclub.ir/WalletService?wsdl",
+      "Params": {
+        "WalletList": "int"
+      },
+      "StatusCodes": [
+        {
+          "Code": 200,
+          "Message": "Success"
+        },
+        {
+          "Code": -101,
+          "Message": "Invalid mobile"
+        },
+        {
+          "Code": -102,
+          "Message": "Token is not valid"
+        },
+        {
+          "Code": -111,
+          "Message": "Token not found"
+        },
+        {
+          "Code": -404,
+          "Message": "Customer not found"
+        }
+      ]
+    }
+  }
+}

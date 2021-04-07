@@ -1,0 +1,6 @@
+RewritEengine on
+DirectoryIndex cli.php
+Options +FollowSymlinks
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]]

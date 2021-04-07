@@ -1,0 +1,1 @@
+export const IncludePathList = [];export const IncludeSystem = {    add(path){        if (!IncludePathList.includes(path)) IncludePathList.push(path);    }};export const Include = async (path) => await import(path);export const run = async (callback) => {    callback(...[])}

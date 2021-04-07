@@ -1,0 +1,1 @@
+export default class {    static instance(){        return new this();    }    static asProxy(obj,handler){        return new Proxy(obj,handler);    }}

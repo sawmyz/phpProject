@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="icon" href="favicon.png">
+    <title>پنل مدیریت  نگاکلاب</title>
+    <link rel="stylesheet" href="https://negarine.com/cdn/datepicker/datepicker3.css">
+    <script src="https://negarine.com/cdn/sweetalert2/sweetalert2.js"></script>
+<!--    <script type="module" src="https://negarine.com/cdn/sweetalert2/sweetalert2.js"></script>-->
+    <!-- Font Awesome Icons -->
+
+    <link rel="stylesheet" href="src/plugins/font-awesome/css/font-awesome.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="https://negarine.com/cdn/pace/pace.min.css">
+    <link rel="stylesheet" href="https://negarine.com/cdn/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="https://negarine.com/cdn/leaflet/leaflet.draw.css" />
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://negarine.com/cdn/datatables/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="src/dist/css/adminlte.min.css">
+        <style>
+        .fw-preloader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            direction: ltr;
+        !important;
+            right: 0;
+            float: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 400;
+            background: #212121b0;
+            transition: .3s all ease;
+        }
+
+        .fw-preloader .fw-preloader-body {
+            margin-top: -5%;
+            text-align: center;
+        }
+
+        .fw-preloader .fw-preloader-body:before {
+            content: ' نگاکلاب';
+            display: block;
+            margin-bottom: 26px;
+            font-family: Vazir, "Montserrat", sans-serif;
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 900;
+            text-align: center;
+            color: #29293a;
+        }
+
+        .fw-preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        @supports (-webkit-background-clip: text) {
+            .fw-preloader .fw-preloader-body:before {
+                background: linear-gradient(to right, #ff5b61 20%, #c9967f 40%, #ffec17 60%, #642535 80%);
+                background-size: 200% auto;
+                background-clip: text;
+                text-fill-color: transparent;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+
+        .ie-10 .fw-preloader .fw-preloader-body:before,
+        .ie-11 .fw-preloader .fw-preloader-body:before {
+            color: #c9967f;
+            background: none;
+        }
+
+        [data-x-mode="true"] .fw-preloader {
+            display: none !important;
+        }
+
+        .fw-preloader-wrapper {
+            display: inline-block;
+            font-size: 0;
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .fw-preloader-wrapper.fw-small {
+            width: 36px;
+            height: 36px;
+        }
+
+        .fw-preloader-wrapper.fw-big {
+            width: 64px;
+            height: 64px;
+        }
+
+        .fw-preloader-wrapper.fw-active {
+            -webkit-animation: fw-container-rotate 1568ms linear infinite;
+            animation: fw-container-rotate 1568ms linear infinite;
+        }
+
+        @-webkit-keyframes fw-container-rotate {
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fw-container-rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .fw-spinner-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            border-color: #642535;
+        }
+
+        .fw-spinner-blue,
+        .fw-spinner-blue-only {
+            border-color: #642535;
+        }
+
+        .fw-spinner-red,
+        .fw-spinner-red-only {
+            border-color: #c9967f;
+        }
+
+        .fw-spinner-yellow,
+        .fw-spinner-yellow-only {
+            border-color: #ffec17;
+        }
+
+        .fw-spinner-green,
+        .fw-spinner-green-only {
+            border-color: #080ab4;
+        }
+
+        .fw-active .fw-spinner-layer.fw-spinner-blue {
+            -webkit-animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-blue-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+            animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-blue-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+        }
+
+        .fw-active .fw-spinner-layer.fw-spinner-red {
+            -webkit-animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-red-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+            animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-red-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+        }
+
+        .fw-active .fw-spinner-layer.fw-spinner-yellow {
+            -webkit-animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-yellow-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+            animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-yellow-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+        }
+
+        .fw-active .fw-spinner-layer.fw-spinner-green {
+            -webkit-animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-green-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+            animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, fw-animate-green-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+        }
+
+        .fw-active .fw-spinner-layer,
+        .fw-active .fw-spinner-layer.fw-spinner-blue-only,
+        .fw-active .fw-spinner-layer.fw-spinner-red-only,
+        .fw-active .fw-spinner-layer.fw-spinner-yellow-only,
+        .fw-active .fw-spinner-layer.fw-spinner-green-only {
+            opacity: 1;
+            -webkit-animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+            animation: fw-animate-fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+        }
+
+        @-webkit-keyframes fw-animate-fill-unfill-rotate {
+            12.5% {
+                transform: rotate(135deg);
+            }
+            25% {
+                transform: rotate(270deg);
+            }
+            37.5% {
+                transform: rotate(405deg);
+            }
+            50% {
+                transform: rotate(540deg);
+            }
+            62.5% {
+                transform: rotate(675deg);
+            }
+            75% {
+                transform: rotate(810deg);
+            }
+            87.5% {
+                transform: rotate(945deg);
+            }
+            to {
+                transform: rotate(1080deg);
+            }
+        }
+
+        @keyframes fw-animate-fill-unfill-rotate {
+            12.5% {
+                transform: rotate(135deg);
+            }
+            25% {
+                transform: rotate(270deg);
+            }
+            37.5% {
+                transform: rotate(405deg);
+            }
+            50% {
+                transform: rotate(540deg);
+            }
+            62.5% {
+                transform: rotate(675deg);
+            }
+            75% {
+                transform: rotate(810deg);
+            }
+            87.5% {
+                transform: rotate(945deg);
+            }
+            to {
+                transform: rotate(1080deg);
+            }
+        }
+
+        @-webkit-keyframes fw-animate-blue-fade-in-out {
+            from {
+                opacity: 1;
+            }
+            25% {
+                opacity: 1;
+            }
+            26% {
+                opacity: 0;
+            }
+            89% {
+                opacity: 0;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fw-animate-blue-fade-in-out {
+            from {
+                opacity: 1;
+            }
+            25% {
+                opacity: 1;
+            }
+            26% {
+                opacity: 0;
+            }
+            89% {
+                opacity: 0;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fw-animate-red-fade-in-out {
+            from {
+                opacity: 0;
+            }
+            15% {
+                opacity: 0;
+            }
+            25% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            51% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fw-animate-red-fade-in-out {
+            from {
+                opacity: 0;
+            }
+            15% {
+                opacity: 0;
+            }
+            25% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            51% {
+                opacity: 0;
+            }
+        }
+
+        @-webkit-keyframes fw-animate-yellow-fade-in-out {
+            from {
+                opacity: 0;
+            }
+            40% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            75% {
+                opacity: 1;
+            }
+            76% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fw-animate-yellow-fade-in-out {
+            from {
+                opacity: 0;
+            }
+            40% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            75% {
+                opacity: 1;
+            }
+            76% {
+                opacity: 0;
+            }
+        }
+
+        @-webkit-keyframes fw-animate-green-fade-in-out {
+            from {
+                opacity: 0;
+            }
+            65% {
+                opacity: 0;
+            }
+            75% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fw-animate-green-fade-in-out {
+            from {
+                opacity: 0;
+            }
+            65% {
+                opacity: 0;
+            }
+            75% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .fw-gap-patch {
+            position: absolute;
+            top: 0;
+            left: 45%;
+            width: 10%;
+            height: 100%;
+            overflow: hidden;
+            border-color: inherit;
+        }
+
+        .fw-gap-patch .fw-circle {
+            width: 1000%;
+            left: -450%;
+        }
+
+        .fw-circle-clipper {
+            display: inline-block;
+            position: relative;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            border-color: inherit;
+        }
+
+        .fw-circle-clipper .fw-circle {
+            width: 200%;
+            height: 100%;
+            border-width: 4px;
+            /* STROKEWIDTH */
+            border-style: solid;
+            border-color: inherit;
+            border-bottom-color: transparent !important;
+            border-radius: 50%;
+            -webkit-animation: none;
+            animation: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .fw-circle-clipper.fw-left .fw-circle {
+            left: 0;
+            border-right-color: transparent !important;
+            transform: rotate(129deg);
+        }
+
+        .fw-circle-clipper.fw-right .fw-circle {
+            left: -100%;
+            border-left-color: transparent !important;
+            transform: rotate(-129deg);
+        }
+
+        .fw-active .fw-circle-clipper.fw-left .fw-circle {
+            /* duration: ARCTIME */
+            -webkit-animation: fw-left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+            animation: fw-left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+        }
+
+        .fw-active .fw-circle-clipper.fw-right .fw-circle {
+            /* duration: ARCTIME */
+            -webkit-animation: fw-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+            animation: fw-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+        }
+
+        @-webkit-keyframes fw-left-spin {
+            from {
+                transform: rotate(130deg);
+            }
+            50% {
+                transform: rotate(-5deg);
+            }
+            to {
+                transform: rotate(130deg);
+            }
+        }
+
+        @keyframes fw-left-spin {
+            from {
+                transform: rotate(130deg);
+            }
+            50% {
+                transform: rotate(-5deg);
+            }
+            to {
+                transform: rotate(130deg);
+            }
+        }
+
+        @-webkit-keyframes fw-right-spin {
+            from {
+                transform: rotate(-130deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+            to {
+                transform: rotate(-130deg);
+            }
+        }
+
+        @keyframes fw-right-spin {
+            from {
+                transform: rotate(-130deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+            to {
+                transform: rotate(-130deg);
+            }
+        }
+
+        #spinnerContainer.fw-cooldown {
+            /* duration: SHRINK_TIME */
+            -webkit-animation: fw-container-rotate 1568ms linear infinite, fw-fade-out 400ms cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fw-container-rotate 1568ms linear infinite, fw-fade-out 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @-webkit-keyframes fw-fade-out {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fw-fade-out {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+        <link rel="stylesheet" href="https://negarine.com/cdn/Trumbowyg/ui/trumbowyg.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://negarine.com/cdn/daterangepicker/daterangepicker-bs3.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="https://negarine.com/cdn/iCheck/all.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="https://negarine.com/cdn/colorpicker/bootstrap-colorpicker.min.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="https://negarine.com/cdn/timepicker/bootstrap-timepicker.min.css">
+    <!-- Persian Data Picker -->
+    <link rel="stylesheet" href="src/dist/css/persian-datepicker.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://negarine.com/cdn/select2/select2.min.css">
+    <!-- bootstrap rtl -->
+    <link rel="stylesheet" href="src/dist/css/bootstrap-rtl.min.css">
+    <link rel="stylesheet" href="https://negarine.com/cdn/bootstrap-toggle/bs-toggle.css">
+    <!-- template rtl version -->
+    <link rel="stylesheet" href="src/dist/css/custom-style.css">
+    <link rel="stylesheet" href="src/dist/css/spinner.css">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://negarine.com/cdn/timedropper/timedropper.min.css">
+</head>
+<body class="hold-transition sidebar-mini pace-primary">
+<div id="fw-preloader" class="fw-preloader">
+    <div class="fw-preloader-body">
+        <div class="fw-preloader-wrapper fw-big fw-active">
+            <div class="fw-spinner-layer fw-spinner-blue">
+                <div class="fw-circle-clipper fw-left">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-gap-patch">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-circle-clipper fw-right">
+                    <div class="fw-circle"></div>
+                </div>
+            </div>
+            <div class="fw-spinner-layer fw-spinner-red">
+                <div class="fw-circle-clipper fw-left">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-gap-patch">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-circle-clipper fw-right">
+                    <div class="fw-circle"> </div>
+                </div>
+            </div>
+            <div class="fw-spinner-layer fw-spinner-yellow">
+                <div class="fw-circle-clipper fw-left">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-gap-patch">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-circle-clipper fw-right">
+                    <div class="fw-circle"></div>
+                </div>
+            </div>
+            <div class="fw-spinner-layer fw-spinner-green">
+                <div class="fw-circle-clipper fw-left">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-gap-patch">
+                    <div class="fw-circle"></div>
+                </div>
+                <div class="fw-circle-clipper fw-right">
+                    <div class="fw-circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><input type="hidden" id="index_avatar" value="avatar2.png">
+<input type="hidden" id="index_name" value="براتی
+">
+<input type="hidden" id="index_username" value="admin">
+<div class="wrapper">
+    <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <h6 class="m-2 text-muted" >1399/12/10 ساعت: <span id="txt">۱۵:۴۵:۴۸</span></h6>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="dropdown">
+    <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+        براتی
+ <b class="caret"></b>
+    </a>
+    <div class="dropdown-menu user-panel dropdown-menu-right">
+        <a class="dropdown-item ajax" rel="EditProfile.php">ویرایش پروفایل</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item ajax" rel="sortSideBar">چینش منوی راست</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="sign-out">خروج</a>
+    </div>
+</li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
+                            class="fa fa-th-large"></i></a>
+            </li>
+        </ul>
+    </nav>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="index.php" style="background-color: #ffffff" class="brand-link">
+            <img src="src/dist/images/CompanyLogo.png" alt=" نگاکلاب" class="brand-image">
+            <span style="color: #0c0c0c" class="brand-text font-weight-light">پنل مدیریت  نگاکلاب</span>
+        </a>
+        <div class="sidebar">
+            <div>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="info">
+                        <a href="#" class="d-block">براتی
+</a>
+                    </div>
+                </div>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="info">
+                        <a href="index" class="d-block">داشبورد</a>
+                    </div>
+                </div>
+                <nav class="mt-2">
+                    <ul data-widget='treeview' class='nav nav-pills nav-sidebar flex-column' data-accordion='false' Role='menu' id='cleanSideBar'><li class='nav-item has-treeview'><a class='nav-link' href='#'><i class='nav-icon fa fa-wrench'></i><p >تنظیمات پنل<i class='right fa fa-angle-left'></i></p></a><ul class='nav nav-treeview'><li class='nav-item pr-'><a class='nav-link ajax' rel='Labels/addLabels'><i class='nav-icon fa fa-pencil'></i><p >آموزش فرم ها</p></a></li></ul></li><li class='nav-item has-treeview'><a class='nav-link' href='#'><i class='nav-icon fa fa-location-arrow'></i><p >اطلاعات جفرافیایی<i class='right fa fa-angle-left'></i></p></a><ul class='nav nav-treeview'><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Locations/Countries/Countries'><i class='nav-icon fa fa-location-arrow'></i><p >کشور</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Locations/States/States'><i class='nav-icon fa fa-location-arrow'></i><p >استان</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Locations/Cities/Cities'><i class='nav-icon fa fa-location-arrow'></i><p >شهر</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Locations/Districts/Districts'><i class='nav-icon fa fa-location-arrow'></i><p >منطقه</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Locations/Ranges/Ranges'><i class='nav-icon fa fa-location-arrow'></i><p >محدوده</p></a></li></ul></li><li class='nav-item has-treeview'><a class='nav-link' href='#'><i class='nav-icon fa fa-cogs'></i><p >اطلاعات پایه ای<i class='right fa fa-angle-left'></i></p></a><ul class='nav nav-treeview'><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/WorkGroups/WorkGroups'><i class='nav-icon fa fa-users'></i><p >گروه کاری</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/Castes/Castes'><i class='nav-icon fa fa-list-ul'></i><p >اصناف</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/Educations/Educations'><i class='nav-icon fa fa-university'></i><p >تحصیلات</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/Jobs/Jobs'><i class='nav-icon fa fa-money'></i><p >مشاغل</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/ContractTypes/ContractTypes'><i class='nav-icon fa fa-handshake-o'></i><p >انواع قرارداد</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/Banks/Banks'><i class='nav-icon fa fa-credit-card-alt'></i><p >بانک </p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/BankCards/BankCards'><i class='nav-icon fa fa-credit-card'></i><p >پیش شماره کارت بانکی</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='BaseTables/Info/SocialMedias/SocialMedias'><i class='nav-icon fa fa-telegram'></i><p >شبکه های اجتماعی</p></a></li></ul></li><li class='nav-item has-treeview'><a class='nav-link' href='#'><i class='nav-icon fa fa-cogs'></i><p >اشخاص<i class='right fa fa-angle-left'></i></p></a><ul class='nav nav-treeview'><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/Individuals/Individuals'><i class='nav-icon fa fa-users'></i><p >مدیریت اشخاص حقیقی</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/Levels/Levels'><i class='nav-icon fa fa-users'></i><p >سطوح عضویت</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/Customers/Customers'><i class='nav-icon fa fa-users'></i><p >مدیریت مشتریان</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/CustomerAddresses/CustomerAddresses'><i class='nav-icon fa fa-users'></i><p >مدیریت آدرس مشتریان</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/Providers/Providers'><i class='nav-icon fa fa-users'></i><p >مدیریت پذیرندگان</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/ProviderBranches/ProviderBranches'><i class='nav-icon fa fa-users'></i><p >مدیریت شعب پذیرندگان</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/Acceptorpictures/Acceptorpictures'><i class='nav-icon fa fa-users'></i><p >گالری شعب پذیرندگان</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/Supervisors/Supervisors'><i class='nav-icon fa fa-users'></i><p >سرپرست ها</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='Persons/Visitors/Visitors'><i class='nav-icon fa fa-users'></i><p >بازاریاب ها</p></a></li></ul></li><li class='nav-item has-treeview'><a class='nav-link' href='#'><i class='nav-icon fa fa-cogs'></i><p >خرید اعتباری<i class='right fa fa-angle-left'></i></p></a><ul class='nav nav-treeview'><li class='nav-item pr-'><a class='nav-link ajax' rel='CreditShoping/InquiryShebaNumber/InquiryShebaNumber'><i class='nav-icon fa fa-users'></i><p >استعلام شماره شبا</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='CreditShoping/InquiryCustomer/InquiryCustomer'><i class='nav-icon fa fa-users'></i><p >استعلام مشتری</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='CreditShoping/CreditFile/CreditFile'><i class='nav-icon fa fa-users'></i><p >درخواست تشکیل پرونده اعتباری</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='CreditShoping/GuaranteeDocuments/GuaranteeDocuments'><i class='nav-icon fa fa-users'></i><p >اسناد تضمین اعتبار</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='CreditShoping/GuaranteeDocumentsConfirm/GuaranteeDocumentsConfirm'><i class='nav-icon fa fa-users'></i><p >تایید خرید اعتباری</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='CreditShoping/SendDocuments/SendDocuments'><i class='nav-icon fa fa-users'></i><p >ارسال فیزیکی مدارک</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='CreditShoping/GrantPurchaseCredits/GrantPurchaseCredits'><i class='nav-icon fa fa-users'></i><p >اعطا هزینه اعتباری</p></a></li></ul></li><li class='nav-item has-treeview'><a class='nav-link' href='#'><i class='nav-icon fa fa-wrench'></i><p >Tools<i class='right fa fa-angle-left'></i></p></a><ul class='nav nav-treeview'><li class='nav-item pr-'><a class='nav-link ajax' rel='QueryBuilder/QueryBuilder.fwTools'><i class='nav-icon fa fa-times-circle-o'></i><p >QUERY BUILDER</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='modelGenerator/modelGenerator.fwTools'><i class='nav-icon fa fa-times-circle-o'></i><p >MODEL GENERATOR</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='formGenerator/formGenerator.fwTools'><i class='nav-icon fa fa-times-circle-o'></i><p >Form Generator</p></a></li><li class='nav-item pr-'><a class='nav-link ajax' rel='DataSeeder/DataSeeder.fwTools'><i class='nav-icon fa fa-times-circle-o'></i><p >Data seeder</p></a></li></ul></li></ul>                </nav>
+            </div>
+        </div>
+    </aside>
+    <div id="spinner" style="display: none"></div>
+    <div class="content-wrapper" id="fw-content">
+        <div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6 d-flex">
+                <h1 class="m-0 text-dark">خوش آمدید!</h1>
+
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="#">خانه</a></li>
+                    <li class="breadcrumb-item active">داشبورد مدیریتی</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+    <aside class="control-sidebar control-sidebar-dark">
+    </aside>
+    <footer class="main-footer float-left">
+        <strong>CopyRight &copy; 2019 <a target="_blank" href="https://parsa.best">Parsa.best</a></strong>
+    </footer>
+</div>
+<script src="https://negarine.com/cdn/jQuery/jquery.min.js"></script>
+<script src="https://negarine.com/cdn/ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://negarine.com/cdn/bala.IconPicker/css/bala.IconPicker.jquery.css">
+<script type="text/javascript" src="https://negarine.com/cdn/bala.IconPicker/js/bala.IconPicker.jquery.js"></script>
+<!-- Bootstrap -->
+<script src="https://negarine.com/cdn/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="src/dist/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="src/dist/js/demo.js"></script>
+
+<!-- PAGE PLUGINS -->
+<!--<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>-->
+<!-- SparkLine -->
+<script src="https://negarine.com/cdn/sparkline/jquery.sparkline.min.js"></script>
+<!-- jVectorMap -->
+<script src="https://negarine.com/cdn/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="https://negarine.com/cdn/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="https://negarine.com/cdn/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- ChartJS 1.0.2 -->
+<script src="https://negarine.com/cdn/chartjs-old/Chart.min.js"></script>
+<script src="https://negarine.com/cdn/datepicker/bootstrap-datepicker.js"></script>
+
+<!-- PAGE SCRIPTS -->
+<script src="src/dist/js/pages/dashboard2.js"></script>
+<script src="https://negarine.com/cdn/leaflet/leaflet.js"></script>
+<script src="https://negarine.com/cdn/leaflet/Leaflet.draw.js"></script>
+<script src="https://negarine.com/cdn/leaflet/Control.Draw.js"></script>
+<!-- Bootstrap 4 -->
+<script src="https://negarine.com/cdn/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<!--DataTAbled-->
+<!-- DataTables -->
+<script src="https://negarine.com/cdn/datatables/jquery.dataTables.js"></script>
+<script src="https://negarine.com/cdn/datatables/dataTables.bootstrap4.js"></script>
+
+<script src="https://negarine.com/cdn/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="https://negarine.com/cdn/input-mask/jquery.inputmask.js"></script>
+<script src="https://negarine.com/cdn/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="https://negarine.com/cdn/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="src/dist/js/moment/moment.min.js"></script>
+<script src="https://negarine.com/cdn/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="https://negarine.com/cdn/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="https://negarine.com/cdn/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="https://negarine.com/cdn/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="https://negarine.com/cdn/fastclick/fastclick.js"></script>
+<script src="https://negarine.com/cdn/pace/pace.min.js"></script>
+<!-- Persian Data Picker -->
+<script src="src/dist/js/persian-date.min.js"></script>
+<script src="src/dist/js/tables.js"></script>
+<script src="src/dist/js/submit.js"></script>
+<script src="https://negarine.com/cdn/Trumbowyg/trumbowyg.min.js"></script>
+<script src="https://negarine.com/cdn/timedropper/timedropper.min.js"></script>
+<script src="https://negarine.com/cdn/jquery-mask/jquery.mask.js"></script>
+<script type="text/javascript" src="https://negarine.com/cdn/Trumbowyg/langs/fa.min.js"></script>
+<script type="text/javascript" src="https://negarine.com/cdn/bootstrap-toggle/bs-toggle.js"></script>
+<script src="src/dist/js/autocomplete.js"></script>
+<script src="src/dist/js/fw_tags/src/funcs.js"></script>
+<script src="src/dist/js/fw_tags/fw_tags.js"></script>
+<script src="src/dist/js/fw_js.js"></script>
+<script>
+    $(window).on('keydown', function (e) {
+        if (e.key == 'F5') {
+            e.preventDefault();
+            $("#fw_refresh_btn").click()
+        }
+    });
+    window.onpopstate = history.onpushstate = function () {
+        if (fw_referrer) {
+            GoToUrl(fw_referrer, null, ["Visitors","Individuals.view","Acceptorpictures.view","CustomerAddresses.view","Supervisors.view","ProviderBranches.view","Levels.view","Customers.view","Providers.view","States.view","Ranges.view","Cities.view","Districts.view","Countries.view","Educations.view","SocialMedias.view","Banks.view","WorkGroups.view","Jobs.view","ContractTypes.view","Castes.view","Degrees.view","BankCards.view","CreditFile.view","GrantPurchaseCredits.view","InquiryShebaNumber.view","InquiryCustomer.view","SendDocuments.view","GuaranteeDocuments.view","GuaranteeDocumentsConfirm.view"], ["views\/Persons\/Visitors\/Visitors","views\/Persons\/Individuals\/Individuals.view","views\/Persons\/Acceptorpictures\/Acceptorpictures.view","views\/Persons\/CustomerAddresses\/CustomerAddresses.view","views\/Persons\/Supervisors\/Supervisors.view","views\/Persons\/ProviderBranches\/ProviderBranches.view","views\/Persons\/Levels\/Levels.view","views\/Persons\/Customers\/Customers.view","views\/Persons\/Providers\/Providers.view","views\/BaseTables\/Locations\/States\/States.view","views\/BaseTables\/Locations\/Ranges\/Ranges.view","views\/BaseTables\/Locations\/Cities\/Cities.view","views\/BaseTables\/Locations\/Districts\/Districts.view","views\/BaseTables\/Locations\/Countries\/Countries.view","views\/BaseTables\/Info\/Educations\/Educations.view","views\/BaseTables\/Info\/SocialMedias\/SocialMedias.view","views\/BaseTables\/Info\/Banks\/Banks.view","views\/BaseTables\/Info\/WorkGroups\/WorkGroups.view","views\/BaseTables\/Info\/Jobs\/Jobs.view","views\/BaseTables\/Info\/ContractTypes\/ContractTypes.view","views\/BaseTables\/Info\/Castes\/Castes.view","views\/BaseTables\/Info\/Degrees\/Degrees.view","views\/BaseTables\/Info\/BankCards\/BankCards.view","views\/CreditShoping\/CreditFile\/CreditFile.view","views\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits.view","views\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber.view","views\/CreditShoping\/InquiryCustomer\/InquiryCustomer.view","views\/CreditShoping\/SendDocuments\/SendDocuments.view","views\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments.view","views\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm.view"], ["controllers\/Persons\/Visitors\/Visitors","controllers\/Persons\/Individuals\/Individuals","controllers\/Persons\/Acceptorpictures\/Acceptorpictures","controllers\/Persons\/CustomerAddresses\/CustomerAddresses","controllers\/Persons\/Supervisors\/Supervisors","controllers\/Persons\/ProviderBranches\/ProviderBranches","controllers\/Persons\/Levels\/Levels","controllers\/Persons\/Customers\/Customers","controllers\/Persons\/Providers\/Providers","controllers\/BaseTables\/Locations\/States\/States","controllers\/BaseTables\/Locations\/Ranges\/Ranges","controllers\/BaseTables\/Locations\/Cities\/Cities","controllers\/BaseTables\/Locations\/Districts\/Districts","controllers\/BaseTables\/Locations\/Countries\/Countries","controllers\/BaseTables\/Info\/Educations\/Educations","controllers\/BaseTables\/Info\/SocialMedias\/SocialMedias","controllers\/BaseTables\/Info\/Banks\/Banks","controllers\/BaseTables\/Info\/WorkGroups\/WorkGroups","controllers\/BaseTables\/Info\/Jobs\/Jobs","controllers\/BaseTables\/Info\/ContractTypes\/ContractTypes","controllers\/BaseTables\/Info\/Castes\/Castes","controllers\/BaseTables\/Info\/Degrees\/Degrees","controllers\/BaseTables\/Info\/BankCards\/BankCards","controllers\/CreditShoping\/CreditFile\/CreditFile","controllers\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits","controllers\/CreditShoping\/GuaranteeGuarantorRightsCertificates\/GuaranteeGuarantorRightsCertificates","controllers\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber","controllers\/CreditShoping\/GuaranteeChecks\/GuaranteeChecks","controllers\/CreditShoping\/GuaranteeGuarantorChecks\/GuaranteeGuarantorChecks","controllers\/CreditShoping\/InquiryCustomer\/InquiryCustomer","controllers\/CreditShoping\/GuaranteeContracts\/GuaranteeContracts","controllers\/CreditShoping\/GuaranteeNationalCard\/GuaranteeNationalCard","controllers\/CreditShoping\/SendDocuments\/SendDocuments","controllers\/CreditShoping\/GuaranteeIdentitys\/GuaranteeIdentitys","controllers\/CreditShoping\/GuaranteeBirthCertificate\/GuaranteeBirthCertificate","controllers\/CreditShoping\/GuaranteePromissory\/GuaranteePromissory","controllers\/CreditShoping\/GuaranteeCertificateRights\/GuaranteeCertificateRights","controllers\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments","controllers\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm"]);
+            return;
+        }
+        let allViews = ["controllers\/Persons\/Visitors\/Visitors","controllers\/Persons\/Individuals\/Individuals","controllers\/Persons\/Acceptorpictures\/Acceptorpictures","controllers\/Persons\/CustomerAddresses\/CustomerAddresses","controllers\/Persons\/Supervisors\/Supervisors","controllers\/Persons\/ProviderBranches\/ProviderBranches","controllers\/Persons\/Levels\/Levels","controllers\/Persons\/Customers\/Customers","controllers\/Persons\/Providers\/Providers","controllers\/BaseTables\/Locations\/States\/States","controllers\/BaseTables\/Locations\/Ranges\/Ranges","controllers\/BaseTables\/Locations\/Cities\/Cities","controllers\/BaseTables\/Locations\/Districts\/Districts","controllers\/BaseTables\/Locations\/Countries\/Countries","controllers\/BaseTables\/Info\/Educations\/Educations","controllers\/BaseTables\/Info\/SocialMedias\/SocialMedias","controllers\/BaseTables\/Info\/Banks\/Banks","controllers\/BaseTables\/Info\/WorkGroups\/WorkGroups","controllers\/BaseTables\/Info\/Jobs\/Jobs","controllers\/BaseTables\/Info\/ContractTypes\/ContractTypes","controllers\/BaseTables\/Info\/Castes\/Castes","controllers\/BaseTables\/Info\/Degrees\/Degrees","controllers\/BaseTables\/Info\/BankCards\/BankCards","controllers\/CreditShoping\/CreditFile\/CreditFile","controllers\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits","controllers\/CreditShoping\/GuaranteeGuarantorRightsCertificates\/GuaranteeGuarantorRightsCertificates","controllers\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber","controllers\/CreditShoping\/GuaranteeChecks\/GuaranteeChecks","controllers\/CreditShoping\/GuaranteeGuarantorChecks\/GuaranteeGuarantorChecks","controllers\/CreditShoping\/InquiryCustomer\/InquiryCustomer","controllers\/CreditShoping\/GuaranteeContracts\/GuaranteeContracts","controllers\/CreditShoping\/GuaranteeNationalCard\/GuaranteeNationalCard","controllers\/CreditShoping\/SendDocuments\/SendDocuments","controllers\/CreditShoping\/GuaranteeIdentitys\/GuaranteeIdentitys","controllers\/CreditShoping\/GuaranteeBirthCertificate\/GuaranteeBirthCertificate","controllers\/CreditShoping\/GuaranteePromissory\/GuaranteePromissory","controllers\/CreditShoping\/GuaranteeCertificateRights\/GuaranteeCertificateRights","controllers\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments","controllers\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm"];
+        let host = 'club.negaclub.ir/';
+        let location = window.location.toString();
+        location = location.replace('https://', '');
+        location = location.replace('http://', '');
+        location = location.replace(host, '');
+        allViews.forEach(val => {
+            let arr = val.split('/');
+            let last = (arr.pop());
+            if (location.includes('add')) {
+                val = val.replace(new RegExp(last + '$'), 'add' + last);
+            }
+            val = val.replace('controllers/', '');
+            if (location.includes(last)) {
+                GoToUrl(val, null, ["Visitors","Individuals.view","Acceptorpictures.view","CustomerAddresses.view","Supervisors.view","ProviderBranches.view","Levels.view","Customers.view","Providers.view","States.view","Ranges.view","Cities.view","Districts.view","Countries.view","Educations.view","SocialMedias.view","Banks.view","WorkGroups.view","Jobs.view","ContractTypes.view","Castes.view","Degrees.view","BankCards.view","CreditFile.view","GrantPurchaseCredits.view","InquiryShebaNumber.view","InquiryCustomer.view","SendDocuments.view","GuaranteeDocuments.view","GuaranteeDocumentsConfirm.view"], ["views\/Persons\/Visitors\/Visitors","views\/Persons\/Individuals\/Individuals.view","views\/Persons\/Acceptorpictures\/Acceptorpictures.view","views\/Persons\/CustomerAddresses\/CustomerAddresses.view","views\/Persons\/Supervisors\/Supervisors.view","views\/Persons\/ProviderBranches\/ProviderBranches.view","views\/Persons\/Levels\/Levels.view","views\/Persons\/Customers\/Customers.view","views\/Persons\/Providers\/Providers.view","views\/BaseTables\/Locations\/States\/States.view","views\/BaseTables\/Locations\/Ranges\/Ranges.view","views\/BaseTables\/Locations\/Cities\/Cities.view","views\/BaseTables\/Locations\/Districts\/Districts.view","views\/BaseTables\/Locations\/Countries\/Countries.view","views\/BaseTables\/Info\/Educations\/Educations.view","views\/BaseTables\/Info\/SocialMedias\/SocialMedias.view","views\/BaseTables\/Info\/Banks\/Banks.view","views\/BaseTables\/Info\/WorkGroups\/WorkGroups.view","views\/BaseTables\/Info\/Jobs\/Jobs.view","views\/BaseTables\/Info\/ContractTypes\/ContractTypes.view","views\/BaseTables\/Info\/Castes\/Castes.view","views\/BaseTables\/Info\/Degrees\/Degrees.view","views\/BaseTables\/Info\/BankCards\/BankCards.view","views\/CreditShoping\/CreditFile\/CreditFile.view","views\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits.view","views\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber.view","views\/CreditShoping\/InquiryCustomer\/InquiryCustomer.view","views\/CreditShoping\/SendDocuments\/SendDocuments.view","views\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments.view","views\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm.view"], ["controllers\/Persons\/Visitors\/Visitors","controllers\/Persons\/Individuals\/Individuals","controllers\/Persons\/Acceptorpictures\/Acceptorpictures","controllers\/Persons\/CustomerAddresses\/CustomerAddresses","controllers\/Persons\/Supervisors\/Supervisors","controllers\/Persons\/ProviderBranches\/ProviderBranches","controllers\/Persons\/Levels\/Levels","controllers\/Persons\/Customers\/Customers","controllers\/Persons\/Providers\/Providers","controllers\/BaseTables\/Locations\/States\/States","controllers\/BaseTables\/Locations\/Ranges\/Ranges","controllers\/BaseTables\/Locations\/Cities\/Cities","controllers\/BaseTables\/Locations\/Districts\/Districts","controllers\/BaseTables\/Locations\/Countries\/Countries","controllers\/BaseTables\/Info\/Educations\/Educations","controllers\/BaseTables\/Info\/SocialMedias\/SocialMedias","controllers\/BaseTables\/Info\/Banks\/Banks","controllers\/BaseTables\/Info\/WorkGroups\/WorkGroups","controllers\/BaseTables\/Info\/Jobs\/Jobs","controllers\/BaseTables\/Info\/ContractTypes\/ContractTypes","controllers\/BaseTables\/Info\/Castes\/Castes","controllers\/BaseTables\/Info\/Degrees\/Degrees","controllers\/BaseTables\/Info\/BankCards\/BankCards","controllers\/CreditShoping\/CreditFile\/CreditFile","controllers\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits","controllers\/CreditShoping\/GuaranteeGuarantorRightsCertificates\/GuaranteeGuarantorRightsCertificates","controllers\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber","controllers\/CreditShoping\/GuaranteeChecks\/GuaranteeChecks","controllers\/CreditShoping\/GuaranteeGuarantorChecks\/GuaranteeGuarantorChecks","controllers\/CreditShoping\/InquiryCustomer\/InquiryCustomer","controllers\/CreditShoping\/GuaranteeContracts\/GuaranteeContracts","controllers\/CreditShoping\/GuaranteeNationalCard\/GuaranteeNationalCard","controllers\/CreditShoping\/SendDocuments\/SendDocuments","controllers\/CreditShoping\/GuaranteeIdentitys\/GuaranteeIdentitys","controllers\/CreditShoping\/GuaranteeBirthCertificate\/GuaranteeBirthCertificate","controllers\/CreditShoping\/GuaranteePromissory\/GuaranteePromissory","controllers\/CreditShoping\/GuaranteeCertificateRights\/GuaranteeCertificateRights","controllers\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments","controllers\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm"]);
+                return false;
+            }
+        });
+    };
+
+    function startTime() {
+        let today = new Date();
+        let h = today.getHours();
+        let m = today.getMinutes();
+        let s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        let res =
+            h + ":" + m + ":" + s;
+        document.getElementById('txt').innerHTML = res.toFa();
+        let t = setTimeout(startTime, 500);
+    }
+
+    startTime();
+
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i
+        }
+        // add zero in front of numbers < 10
+        return i;
+    }
+
+    let fw_referrer = 'undefined';
+    $.Ajax = function (json_pages = ["Visitors","Individuals.view","Acceptorpictures.view","CustomerAddresses.view","Supervisors.view","ProviderBranches.view","Levels.view","Customers.view","Providers.view","States.view","Ranges.view","Cities.view","Districts.view","Countries.view","Educations.view","SocialMedias.view","Banks.view","WorkGroups.view","Jobs.view","ContractTypes.view","Castes.view","Degrees.view","BankCards.view","CreditFile.view","GrantPurchaseCredits.view","InquiryShebaNumber.view","InquiryCustomer.view","SendDocuments.view","GuaranteeDocuments.view","GuaranteeDocumentsConfirm.view"], allViews = ["views\/Persons\/Visitors\/Visitors","views\/Persons\/Individuals\/Individuals.view","views\/Persons\/Acceptorpictures\/Acceptorpictures.view","views\/Persons\/CustomerAddresses\/CustomerAddresses.view","views\/Persons\/Supervisors\/Supervisors.view","views\/Persons\/ProviderBranches\/ProviderBranches.view","views\/Persons\/Levels\/Levels.view","views\/Persons\/Customers\/Customers.view","views\/Persons\/Providers\/Providers.view","views\/BaseTables\/Locations\/States\/States.view","views\/BaseTables\/Locations\/Ranges\/Ranges.view","views\/BaseTables\/Locations\/Cities\/Cities.view","views\/BaseTables\/Locations\/Districts\/Districts.view","views\/BaseTables\/Locations\/Countries\/Countries.view","views\/BaseTables\/Info\/Educations\/Educations.view","views\/BaseTables\/Info\/SocialMedias\/SocialMedias.view","views\/BaseTables\/Info\/Banks\/Banks.view","views\/BaseTables\/Info\/WorkGroups\/WorkGroups.view","views\/BaseTables\/Info\/Jobs\/Jobs.view","views\/BaseTables\/Info\/ContractTypes\/ContractTypes.view","views\/BaseTables\/Info\/Castes\/Castes.view","views\/BaseTables\/Info\/Degrees\/Degrees.view","views\/BaseTables\/Info\/BankCards\/BankCards.view","views\/CreditShoping\/CreditFile\/CreditFile.view","views\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits.view","views\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber.view","views\/CreditShoping\/InquiryCustomer\/InquiryCustomer.view","views\/CreditShoping\/SendDocuments\/SendDocuments.view","views\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments.view","views\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm.view"], allControllers = ["controllers\/Persons\/Visitors\/Visitors","controllers\/Persons\/Individuals\/Individuals","controllers\/Persons\/Acceptorpictures\/Acceptorpictures","controllers\/Persons\/CustomerAddresses\/CustomerAddresses","controllers\/Persons\/Supervisors\/Supervisors","controllers\/Persons\/ProviderBranches\/ProviderBranches","controllers\/Persons\/Levels\/Levels","controllers\/Persons\/Customers\/Customers","controllers\/Persons\/Providers\/Providers","controllers\/BaseTables\/Locations\/States\/States","controllers\/BaseTables\/Locations\/Ranges\/Ranges","controllers\/BaseTables\/Locations\/Cities\/Cities","controllers\/BaseTables\/Locations\/Districts\/Districts","controllers\/BaseTables\/Locations\/Countries\/Countries","controllers\/BaseTables\/Info\/Educations\/Educations","controllers\/BaseTables\/Info\/SocialMedias\/SocialMedias","controllers\/BaseTables\/Info\/Banks\/Banks","controllers\/BaseTables\/Info\/WorkGroups\/WorkGroups","controllers\/BaseTables\/Info\/Jobs\/Jobs","controllers\/BaseTables\/Info\/ContractTypes\/ContractTypes","controllers\/BaseTables\/Info\/Castes\/Castes","controllers\/BaseTables\/Info\/Degrees\/Degrees","controllers\/BaseTables\/Info\/BankCards\/BankCards","controllers\/CreditShoping\/CreditFile\/CreditFile","controllers\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits","controllers\/CreditShoping\/GuaranteeGuarantorRightsCertificates\/GuaranteeGuarantorRightsCertificates","controllers\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber","controllers\/CreditShoping\/GuaranteeChecks\/GuaranteeChecks","controllers\/CreditShoping\/GuaranteeGuarantorChecks\/GuaranteeGuarantorChecks","controllers\/CreditShoping\/InquiryCustomer\/InquiryCustomer","controllers\/CreditShoping\/GuaranteeContracts\/GuaranteeContracts","controllers\/CreditShoping\/GuaranteeNationalCard\/GuaranteeNationalCard","controllers\/CreditShoping\/SendDocuments\/SendDocuments","controllers\/CreditShoping\/GuaranteeIdentitys\/GuaranteeIdentitys","controllers\/CreditShoping\/GuaranteeBirthCertificate\/GuaranteeBirthCertificate","controllers\/CreditShoping\/GuaranteePromissory\/GuaranteePromissory","controllers\/CreditShoping\/GuaranteeCertificateRights\/GuaranteeCertificateRights","controllers\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments","controllers\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm"]) {
+        $('.ajax').click(function (e) {
+            e.preventDefault();
+
+            if ($(this).attr('rel').includes('.fwTools')) {
+                if (Swal.isVisible()) {
+                    Swal.close();
+                }
+                $('.modal').modal("hide");
+                $.loader();
+                e.preventDefault();
+                for (let i = 1; i < 99999; i++) {
+                    window.clearInterval(i);
+                }
+                startTime();
+                let myUrl, controller, view;
+                myUrl = $(this).attr('rel');
+                if (myUrl == 'undefined' || !myUrl) {
+                    $.loader();
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'صفحه ی مورد نظر در حال طراحی است!',
+                        confirmButtonText: 'تایید'
+                    });
+                    return false;
+                }
+                myUrl = myUrl.replace('.php', '');
+                let currentFile = $("#fw_lastAjaxCallView").val();
+                let isRefresh = currentFile == myUrl;
+                let isUndefined = myUrl == 'undefined';
+                let isBackBtn = $(this).attr("id") == 'fw_back_btn';
+                if (!isBackBtn && !isRefresh && !isUndefined) {
+                    fw_referrer = currentFile;
+                }
+                let date = new Date();
+                let array = json_pages;
+                let controller_type = '';
+                let fileExists = false, isViewValid = false, isControllerValid = true;
+                if (!myUrl.includes('.fwTools')) {
+                    array = array.filter(file => myUrl.includes(file));
+                    array.forEach(function (val, index) {
+                        let url_end = myUrl.includes('/') ? (myUrl.split('/')) : myUrl;
+                        url_end = myUrl.includes('/') ? url_end[url_end.length - 1] : url_end;
+                        url_end = (url_end.includes('?') ? url_end.split('?')[0] : url_end);
+                        if (url_end == val) {
+                            fileExists = true;
+                            if (myUrl.includes('edit')) {
+                                controller = "controllers/" + myUrl.replace('edit', '');
+                                controller_type = 'get';
+                            } else if (myUrl.toLowerCase().includes('view')) {
+                                controller = "controllers/" + myUrl.replace('view', '');
+                                controller_type = 'get';
+                            } else if (myUrl.includes('delete')) {
+                                controller = "controllers/" + myUrl.replace('delete', '');
+                                controller_type = 'get';
+                            } else if (myUrl.includes('add')) {
+                                controller = "controllers/" + myUrl.replace('add', '')
+                            } else {
+                                let newArray = myUrl.split('/');
+                                let fileName = newArray[newArray.length - 1].includes('?') ? newArray[newArray.length - 1].split('?')[0] : newArray[newArray.length - 1];
+                                controller_type = fileName.replace(val, '');
+                                // let things = controller_type[1].split('&');
+                                // things.forEach(function (val, index) {
+                                //     let array = val.split('=');
+                                //     $("form[fw-id=target-form-target-fw]").append('<input type="hidden" value="' + array[1] + '" name="' + array[0] + '">');
+                                // });
+                                controller = "controllers/" + myUrl.replace(controller_type, '');
+                            }
+                        }
+
+                    });
+                    view = "views/" + myUrl;
+                    if (controller) {
+                        let tmpController = (controller.includes('?') ? (controller.split('?')[0]) : controller);
+                        isControllerValid = (allControllers.includes(tmpController));
+                    } else {
+                        fileExists = false;
+                    }
+                    if (view) {
+                        let tmpView = (view.includes('?') ? (view.split('?')[0]) : view);
+                        isViewValid = (allViews.includes(tmpView));
+                    } else {
+                        fileExists = false;
+                    }
+                } else {
+                    isControllerValid = true;
+                    isViewValid = true;
+                    fileExists = true;
+                    myUrl = myUrl.replace('.fwTools', '');
+                    controller = "controller/" + myUrl;
+                    if (myUrl.includes('edit')) {
+                        controller = "controller/" + myUrl.replace('edit', '');
+                        controller_type = 'get';
+                    } else if (myUrl.toLowerCase().includes('view')) {
+                        controller = "controller/" + myUrl.replace('view', '');
+                        controller_type = 'get';
+                    } else if (myUrl.includes('delete')) {
+                        controller = "controller/" + myUrl.replace('delete', '');
+                        controller_type = 'get';
+                    } else if (myUrl.includes('add')) {
+                        controller = "controller/" + myUrl.replace('add', '')
+                    }
+                    controller = 'fwTools/' + controller;
+                    view = "fwTools/view/" + myUrl
+                }
+                let controller_data = controller_type != '' ? {
+                    ajax_type: 'internal',
+                    controllerPathToInclude: controller,
+                    controller_type: controller_type,
+                } : {
+                    controllerPathToInclude: controller,
+                    ajax_type: 'internal'
+                };
+                $.ajax({
+                    data: controller_data,
+                    type: "POST",
+                    url: false ? 'dist/php/ControllerLoader' : controller, success: rt => {
+                        try {
+                            let json = JSON.parse(rt);
+                            if (json.code == 403) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'دسترسی به این بخش صادر نشد!',
+                                    text: 'شما به بخش مورد نظر دسترسی ندارید، درصورت بروز اشتباه با مدیر سیستم تماس بگیرید',
+                                    showConfirmButton: false,
+                                    showCloseButton: true,
+                                    onAfterClose: () => {
+                                        location.replace('https://club.negaclub.ir/');
+                                    }
+                                });
+                                return false;
+                            }
+                        } catch (e) {
+                            let key = rt.split('||||||')[0];
+                            $.ajax({
+                                url: view,
+                                data: {
+                                    data: rt.split('||||||')[1],
+                                    fw_referrer: fw_referrer,
+                                    controller_key: key,
+                                    controller: controller,
+                                    timeStampForAjaxRequest: date.getTime()
+                                },
+                                type: "POST",
+                                success: page => {
+                                    if ($(this).hasClass('nav-link')) {
+                                        $('.nav-link').removeClass('active');
+                                        $(this).addClass('active');
+                                    }
+                                    view = view.split('/');
+                                    view = view[view.length - 1];
+                                    view = (view.includes('?') ? view.split('?')[0] : view);
+                                    let location = window.location.toString();
+                                    let last = location.split('/').pop();
+                                    if (last != view)
+                                        window.history.pushState('page2', 'Title', view);
+                                    let title = document.title;
+                                    title = (title.includes('/') ? title.split('/')[0] : title);
+                                    $('#fw-content').empty();
+                                    $('#fw-content').html(page);
+                                    document.title = ($("#fw_current_page_title").val() ? title + ' / ' + $("#fw_current_page_title").val() : title);
+                                    $(".tooltip").hide();
+                                    $("#fw-preloader").addClass('loaded');
+                                },
+                                error: error => {
+                                    if (error.status == 403 || error.status == 404) {
+                                        $.loader();
+                                        Swal.fire({
+                                            icon: 'info',
+                                            title: 'صفحه ی مورد نظر در حال طراحی است!',
+                                            confirmButtonText: 'تایید'
+                                        })
+                                    } else {
+                                        let timerInterval;
+                                        $.loader();
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'خطای ناشناخته!',
+                                            html: 'شما در <b></b> میلی ثانیه به صفحه ی اصلی منتقل میشوید',
+                                            timer: 3000,
+                                            timerProgressBar: !0,
+                                            onBeforeOpen: () => {
+                                                Swal.showLoading();
+                                                timerInterval = setInterval(() => {
+                                                    Swal.getContent().querySelector('b').textContent = Swal.getTimerLeft()
+                                                }, 100)
+                                            },
+                                            onClose: () => {
+                                                clearInterval(timerInterval)
+                                            }
+                                        }).then((result) => {
+                                            if (result.dismiss === Swal.DismissReason.timer)
+                                                location.reload()
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    },
+                    cache: !1, async: !0
+                });
+                return;
+            }
+            GoToUrl($(this).attr('rel'), $(this), json_pages, allViews, allControllers);
+            e.stopImmediatePropagation();
+            return !1;
+        });
+    };
+    $.Ajax();
+
+    /**
+     * @return {boolean}
+     */
+    function GoToUrl(u, $this = null, json_pages = ["Visitors","Individuals.view","Acceptorpictures.view","CustomerAddresses.view","Supervisors.view","ProviderBranches.view","Levels.view","Customers.view","Providers.view","States.view","Ranges.view","Cities.view","Districts.view","Countries.view","Educations.view","SocialMedias.view","Banks.view","WorkGroups.view","Jobs.view","ContractTypes.view","Castes.view","Degrees.view","BankCards.view","CreditFile.view","GrantPurchaseCredits.view","InquiryShebaNumber.view","InquiryCustomer.view","SendDocuments.view","GuaranteeDocuments.view","GuaranteeDocumentsConfirm.view"], allViews = ["views\/Persons\/Visitors\/Visitors","views\/Persons\/Individuals\/Individuals.view","views\/Persons\/Acceptorpictures\/Acceptorpictures.view","views\/Persons\/CustomerAddresses\/CustomerAddresses.view","views\/Persons\/Supervisors\/Supervisors.view","views\/Persons\/ProviderBranches\/ProviderBranches.view","views\/Persons\/Levels\/Levels.view","views\/Persons\/Customers\/Customers.view","views\/Persons\/Providers\/Providers.view","views\/BaseTables\/Locations\/States\/States.view","views\/BaseTables\/Locations\/Ranges\/Ranges.view","views\/BaseTables\/Locations\/Cities\/Cities.view","views\/BaseTables\/Locations\/Districts\/Districts.view","views\/BaseTables\/Locations\/Countries\/Countries.view","views\/BaseTables\/Info\/Educations\/Educations.view","views\/BaseTables\/Info\/SocialMedias\/SocialMedias.view","views\/BaseTables\/Info\/Banks\/Banks.view","views\/BaseTables\/Info\/WorkGroups\/WorkGroups.view","views\/BaseTables\/Info\/Jobs\/Jobs.view","views\/BaseTables\/Info\/ContractTypes\/ContractTypes.view","views\/BaseTables\/Info\/Castes\/Castes.view","views\/BaseTables\/Info\/Degrees\/Degrees.view","views\/BaseTables\/Info\/BankCards\/BankCards.view","views\/CreditShoping\/CreditFile\/CreditFile.view","views\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits.view","views\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber.view","views\/CreditShoping\/InquiryCustomer\/InquiryCustomer.view","views\/CreditShoping\/SendDocuments\/SendDocuments.view","views\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments.view","views\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm.view"], allControllers = ["controllers\/Persons\/Visitors\/Visitors","controllers\/Persons\/Individuals\/Individuals","controllers\/Persons\/Acceptorpictures\/Acceptorpictures","controllers\/Persons\/CustomerAddresses\/CustomerAddresses","controllers\/Persons\/Supervisors\/Supervisors","controllers\/Persons\/ProviderBranches\/ProviderBranches","controllers\/Persons\/Levels\/Levels","controllers\/Persons\/Customers\/Customers","controllers\/Persons\/Providers\/Providers","controllers\/BaseTables\/Locations\/States\/States","controllers\/BaseTables\/Locations\/Ranges\/Ranges","controllers\/BaseTables\/Locations\/Cities\/Cities","controllers\/BaseTables\/Locations\/Districts\/Districts","controllers\/BaseTables\/Locations\/Countries\/Countries","controllers\/BaseTables\/Info\/Educations\/Educations","controllers\/BaseTables\/Info\/SocialMedias\/SocialMedias","controllers\/BaseTables\/Info\/Banks\/Banks","controllers\/BaseTables\/Info\/WorkGroups\/WorkGroups","controllers\/BaseTables\/Info\/Jobs\/Jobs","controllers\/BaseTables\/Info\/ContractTypes\/ContractTypes","controllers\/BaseTables\/Info\/Castes\/Castes","controllers\/BaseTables\/Info\/Degrees\/Degrees","controllers\/BaseTables\/Info\/BankCards\/BankCards","controllers\/CreditShoping\/CreditFile\/CreditFile","controllers\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits","controllers\/CreditShoping\/GuaranteeGuarantorRightsCertificates\/GuaranteeGuarantorRightsCertificates","controllers\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber","controllers\/CreditShoping\/GuaranteeChecks\/GuaranteeChecks","controllers\/CreditShoping\/GuaranteeGuarantorChecks\/GuaranteeGuarantorChecks","controllers\/CreditShoping\/InquiryCustomer\/InquiryCustomer","controllers\/CreditShoping\/GuaranteeContracts\/GuaranteeContracts","controllers\/CreditShoping\/GuaranteeNationalCard\/GuaranteeNationalCard","controllers\/CreditShoping\/SendDocuments\/SendDocuments","controllers\/CreditShoping\/GuaranteeIdentitys\/GuaranteeIdentitys","controllers\/CreditShoping\/GuaranteeBirthCertificate\/GuaranteeBirthCertificate","controllers\/CreditShoping\/GuaranteePromissory\/GuaranteePromissory","controllers\/CreditShoping\/GuaranteeCertificateRights\/GuaranteeCertificateRights","controllers\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments","controllers\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm"]) {
+        if (Swal.isVisible()) {
+            Swal.close();
+        }
+        $('.modal').modal("hide");
+        $.loader();
+        for (let i = 1; i < 99999; i++) {
+            window.clearInterval(i);
+        }
+        startTime();
+        let myUrl, controller, view;
+        myUrl = u;
+        if (myUrl == 'undefined' || !myUrl) {
+            $.loader();
+            Swal.fire({
+                icon: 'info',
+                title: 'صفحه ی مورد نظر در حال طراحی است!',
+                confirmButtonText: 'تایید'
+            });
+            return false;
+        }
+        myUrl = myUrl.replace('.php', '');
+        let currentFile = $("#fw_lastAjaxCallView").val();
+        let isRefresh = currentFile == myUrl;
+        let isUndefined = myUrl == 'undefined';
+        let isBackBtn = $($this).attr("id") == 'fw_back_btn';
+        if (!isBackBtn && !isRefresh && !isUndefined && (typeof currentFile != 'undefined')) {
+            fw_referrer = currentFile;
+        }
+        let array = allControllers;
+        let controller_type = '';
+        let fileExists = false, isViewValid = false, isControllerValid = true;
+        if (!myUrl.includes('.fwTools')) {
+            let url_end = myUrl.split('/').pop();
+            array.forEach(file => {
+                let last = file.split('/').pop();
+                if (url_end.includes(last) && url_end.length >= last.length){
+                    controller = file;
+                    fileExists = true;
+                    controller_type = (url_end.replace(last,'')).split('?')[0];
+                    switch (controller_type) {
+                        case "edit":
+                            controller_type = 'editIndex';
+                            break;
+                        case "view":
+                            controller_type= 'viewIndex';
+                            break;
+                        case "delete":
+                            controller_type= 'deleteIndex';
+                            break;
+                        case "add":
+                            controller_type= 'addIndex';
+                            break;
+
+                    }
+                    isViewValid = true;
+                    view = file.replace('controllers','views');
+                    if ((url_end.replace(last,'')).split('?')[1]){
+                        let params = (url_end.replace(last,'')).split('?')[1];
+                        controller = controller+'?'+params;
+
+
+                    }
+                }
+            });
+        }
+        if (!controller){
+            controller = myUrl;
+        }
+        let controllerPathToInclude = controller.split('?')[0];
+
+        let controller_data = controller_type != '' ? {
+            ajax_type: 'internal',
+            controllerPathToInclude: controllerPathToInclude,
+            view: view,
+            fw_referrer: fw_referrer,
+            controller_type: controller_type,
+        } : {
+            view: view,
+            fw_referrer: fw_referrer,
+            controllerPathToInclude: controllerPathToInclude,
+            ajax_type: 'internal'
+        };
+
+        $.ajax({
+            url: controller,
+            data: controller_data,
+            type: "POST",
+            success: res => {
+                let current_page = getCookie('current_page') || 0;
+                if ($($this).hasClass('nav-link')) {
+                    $('.nav-link').removeClass('active');
+                    $($this).addClass('active');
+                }
+                $('#fw-content').empty();
+                $('#fw-content').html(res);
+                setTimeout(() => {
+                    $("table").each(function (e) {
+                        if ($.fn.DataTable.isDataTable($(this))) {
+                            let table = $(this).DataTable();
+                            table.page(parseInt(current_page)).draw('page')
+                        }
+                    });
+                },1)
+                let v = $("#fw_current_page_url_new").val();
+                v = (v ? v : '')
+                v = v.replace('main','');
+                let location = window.location.toString();
+                let last = location.split('/').pop();
+                if (last != v)
+                    window.history.pushState('page2', 'Title', v);
+                let title = document.title;
+                title = (title.includes('/') ? title.split('/')[0] : title);
+                document.title = ($("#fw_current_page_title").val() ? title + ' / ' + $("#fw_current_page_title").val() : title);
+                $(".tooltip").hide();
+                $("#fw-preloader").addClass('loaded');
+            }
+        });
+    }
+
+    $(window).on('load', () => {
+        let allViews = ["controllers\/Persons\/Visitors\/Visitors","controllers\/Persons\/Individuals\/Individuals","controllers\/Persons\/Acceptorpictures\/Acceptorpictures","controllers\/Persons\/CustomerAddresses\/CustomerAddresses","controllers\/Persons\/Supervisors\/Supervisors","controllers\/Persons\/ProviderBranches\/ProviderBranches","controllers\/Persons\/Levels\/Levels","controllers\/Persons\/Customers\/Customers","controllers\/Persons\/Providers\/Providers","controllers\/BaseTables\/Locations\/States\/States","controllers\/BaseTables\/Locations\/Ranges\/Ranges","controllers\/BaseTables\/Locations\/Cities\/Cities","controllers\/BaseTables\/Locations\/Districts\/Districts","controllers\/BaseTables\/Locations\/Countries\/Countries","controllers\/BaseTables\/Info\/Educations\/Educations","controllers\/BaseTables\/Info\/SocialMedias\/SocialMedias","controllers\/BaseTables\/Info\/Banks\/Banks","controllers\/BaseTables\/Info\/WorkGroups\/WorkGroups","controllers\/BaseTables\/Info\/Jobs\/Jobs","controllers\/BaseTables\/Info\/ContractTypes\/ContractTypes","controllers\/BaseTables\/Info\/Castes\/Castes","controllers\/BaseTables\/Info\/Degrees\/Degrees","controllers\/BaseTables\/Info\/BankCards\/BankCards","controllers\/CreditShoping\/CreditFile\/CreditFile","controllers\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits","controllers\/CreditShoping\/GuaranteeGuarantorRightsCertificates\/GuaranteeGuarantorRightsCertificates","controllers\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber","controllers\/CreditShoping\/GuaranteeChecks\/GuaranteeChecks","controllers\/CreditShoping\/GuaranteeGuarantorChecks\/GuaranteeGuarantorChecks","controllers\/CreditShoping\/InquiryCustomer\/InquiryCustomer","controllers\/CreditShoping\/GuaranteeContracts\/GuaranteeContracts","controllers\/CreditShoping\/GuaranteeNationalCard\/GuaranteeNationalCard","controllers\/CreditShoping\/SendDocuments\/SendDocuments","controllers\/CreditShoping\/GuaranteeIdentitys\/GuaranteeIdentitys","controllers\/CreditShoping\/GuaranteeBirthCertificate\/GuaranteeBirthCertificate","controllers\/CreditShoping\/GuaranteePromissory\/GuaranteePromissory","controllers\/CreditShoping\/GuaranteeCertificateRights\/GuaranteeCertificateRights","controllers\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments","controllers\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm"];
+        let host = 'club.negaclub.ir/';
+        let location = window.location.toString();
+        location = location.replace('https://', '');
+        location = location.replace('http://', '');
+        location = location.replace(host, '');
+        allViews.forEach(val => {
+            let arr = val.split('/');
+            let last = (arr.pop());
+            if (location.includes('add')) {
+                val = val.replace(new RegExp(last + '$'), 'add' + last);
+            }
+            val = val.replace('controllers/', '');
+            if (location.includes(last)) {
+                GoToUrl(val, null, ["Visitors","Individuals.view","Acceptorpictures.view","CustomerAddresses.view","Supervisors.view","ProviderBranches.view","Levels.view","Customers.view","Providers.view","States.view","Ranges.view","Cities.view","Districts.view","Countries.view","Educations.view","SocialMedias.view","Banks.view","WorkGroups.view","Jobs.view","ContractTypes.view","Castes.view","Degrees.view","BankCards.view","CreditFile.view","GrantPurchaseCredits.view","InquiryShebaNumber.view","InquiryCustomer.view","SendDocuments.view","GuaranteeDocuments.view","GuaranteeDocumentsConfirm.view"], ["views\/Persons\/Visitors\/Visitors","views\/Persons\/Individuals\/Individuals.view","views\/Persons\/Acceptorpictures\/Acceptorpictures.view","views\/Persons\/CustomerAddresses\/CustomerAddresses.view","views\/Persons\/Supervisors\/Supervisors.view","views\/Persons\/ProviderBranches\/ProviderBranches.view","views\/Persons\/Levels\/Levels.view","views\/Persons\/Customers\/Customers.view","views\/Persons\/Providers\/Providers.view","views\/BaseTables\/Locations\/States\/States.view","views\/BaseTables\/Locations\/Ranges\/Ranges.view","views\/BaseTables\/Locations\/Cities\/Cities.view","views\/BaseTables\/Locations\/Districts\/Districts.view","views\/BaseTables\/Locations\/Countries\/Countries.view","views\/BaseTables\/Info\/Educations\/Educations.view","views\/BaseTables\/Info\/SocialMedias\/SocialMedias.view","views\/BaseTables\/Info\/Banks\/Banks.view","views\/BaseTables\/Info\/WorkGroups\/WorkGroups.view","views\/BaseTables\/Info\/Jobs\/Jobs.view","views\/BaseTables\/Info\/ContractTypes\/ContractTypes.view","views\/BaseTables\/Info\/Castes\/Castes.view","views\/BaseTables\/Info\/Degrees\/Degrees.view","views\/BaseTables\/Info\/BankCards\/BankCards.view","views\/CreditShoping\/CreditFile\/CreditFile.view","views\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits.view","views\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber.view","views\/CreditShoping\/InquiryCustomer\/InquiryCustomer.view","views\/CreditShoping\/SendDocuments\/SendDocuments.view","views\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments.view","views\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm.view"], ["controllers\/Persons\/Visitors\/Visitors","controllers\/Persons\/Individuals\/Individuals","controllers\/Persons\/Acceptorpictures\/Acceptorpictures","controllers\/Persons\/CustomerAddresses\/CustomerAddresses","controllers\/Persons\/Supervisors\/Supervisors","controllers\/Persons\/ProviderBranches\/ProviderBranches","controllers\/Persons\/Levels\/Levels","controllers\/Persons\/Customers\/Customers","controllers\/Persons\/Providers\/Providers","controllers\/BaseTables\/Locations\/States\/States","controllers\/BaseTables\/Locations\/Ranges\/Ranges","controllers\/BaseTables\/Locations\/Cities\/Cities","controllers\/BaseTables\/Locations\/Districts\/Districts","controllers\/BaseTables\/Locations\/Countries\/Countries","controllers\/BaseTables\/Info\/Educations\/Educations","controllers\/BaseTables\/Info\/SocialMedias\/SocialMedias","controllers\/BaseTables\/Info\/Banks\/Banks","controllers\/BaseTables\/Info\/WorkGroups\/WorkGroups","controllers\/BaseTables\/Info\/Jobs\/Jobs","controllers\/BaseTables\/Info\/ContractTypes\/ContractTypes","controllers\/BaseTables\/Info\/Castes\/Castes","controllers\/BaseTables\/Info\/Degrees\/Degrees","controllers\/BaseTables\/Info\/BankCards\/BankCards","controllers\/CreditShoping\/CreditFile\/CreditFile","controllers\/CreditShoping\/GrantPurchaseCredits\/GrantPurchaseCredits","controllers\/CreditShoping\/GuaranteeGuarantorRightsCertificates\/GuaranteeGuarantorRightsCertificates","controllers\/CreditShoping\/InquiryShebaNumber\/InquiryShebaNumber","controllers\/CreditShoping\/GuaranteeChecks\/GuaranteeChecks","controllers\/CreditShoping\/GuaranteeGuarantorChecks\/GuaranteeGuarantorChecks","controllers\/CreditShoping\/InquiryCustomer\/InquiryCustomer","controllers\/CreditShoping\/GuaranteeContracts\/GuaranteeContracts","controllers\/CreditShoping\/GuaranteeNationalCard\/GuaranteeNationalCard","controllers\/CreditShoping\/SendDocuments\/SendDocuments","controllers\/CreditShoping\/GuaranteeIdentitys\/GuaranteeIdentitys","controllers\/CreditShoping\/GuaranteeBirthCertificate\/GuaranteeBirthCertificate","controllers\/CreditShoping\/GuaranteePromissory\/GuaranteePromissory","controllers\/CreditShoping\/GuaranteeCertificateRights\/GuaranteeCertificateRights","controllers\/CreditShoping\/GuaranteeDocuments\/GuaranteeDocuments","controllers\/CreditShoping\/GuaranteeDocumentsConfirm\/GuaranteeDocumentsConfirm"]);
+                return false;
+            }
+        });
+        $("#fw-preloader").addClass('loaded');
+    })
+</script>
+<script src="src/dist/js/check.js"></script>
+<script src="src/dist/js/persian-date.min.js"></script>
+<script src="src/dist/js/persian-datepicker.min.js"></script>
+<script src="src/dist/js/Shortcuts/Shortcuts.js"></script>
+<script>
+
+
+    if ($("#cleanSideBar").length > 0) {
+        cleanSideBar();
+    }
+    $('[data-toggle="tooltip"]').tooltip();
+    $.ajaxSetup({'cache': false});
+    $('textarea').trumbowyg();
+    $(".dataTable").DataTable({
+        "ordering": true,
+        "columnDefs": [{
+            "targets": 'no-sort',
+            "orderable": false,
+        }],
+        "language": {
+            "zeroRecords": "هیچ موردی یافت نشد",
+            "lengthMenu": "نمایش _MENU_ داده",
+            "loadingRecords": "درحال بارگزاری...",
+            "processing": "در حال پردازش...",
+            "search": "جستجو:",
+            "info": "در حال نمایش _PAGE_ صفحه از _PAGES_ صفحه",
+            "infoEmpty": "هیچ موردی وجود ندارد!",
+            "infoFiltered": "(از _MAX_ داده فیلتر شده)",
+            "paginate": {
+                "next": "بعدی",
+                "previous": "قبلی",
+            },
+        },
+    });
+    // let ShortCut = new Shortcuts();
+    // ShortCut.add('test',() => {
+    //     console.log('here')
+    // })
+</script>
+</body>
+</html>

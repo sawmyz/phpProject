@@ -1,0 +1,1 @@
+<?phpspl_autoload_register(function ($name){	if (str($name)->includes('CodeGenerator')){		$name = str($name)->explode('\\')[sizeof(str($name)->explode('\\')) - 1];		include __SOURCE__.'dist/php/CodeGenerator/'.$name.'.php';	}});
